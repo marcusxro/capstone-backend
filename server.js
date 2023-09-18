@@ -1,12 +1,27 @@
 const express = require('express')
 const app = express()
 const cors = require('cors')
-app.use(cors())
+
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 const bodyParser = require('body-parser');
 const DBcollection = require('./mongo'); // activity model
 const { ObjectId } = require('mongodb'); // used for result in delete method
+
+
+const allowedOrigins = ['https://frontend-xjks.onrender.com'];
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+};
+
+app.use(cors(corsOptions));
 
 app.get('/', (req, res) => {
   res.send('connected');
