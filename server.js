@@ -8,20 +8,22 @@ const bodyParser = require('body-parser');
 const DBcollection = require('./mongo'); // activity model
 const { ObjectId } = require('mongodb'); // used for result in delete method
 
+app.use(
+  cors({
+    origin: 'https://frontendforcapstone.onrender.com',
+    methods: "GET,POST,PUT,DELETE, PATCH",
+    credentials: true,
+  })
+);
 
-const allowedOrigins = ['https://frontend-xjks.onrender.com'];
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', 'https://frontendforcapstone.onrender.com');
+  // You can add other CORS headers as needed.
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  next();
+});
 
-const corsOptions = {
-  origin: function (origin, callback) {
-    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-};
-
-app.use(cors(corsOptions));
 
 app.get('/', (req, res) => {
   res.send('connected');
